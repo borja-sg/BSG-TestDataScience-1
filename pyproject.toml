@@ -36,6 +36,7 @@ ruff = "^0.4.4"
 mypy = "^1.10.0"
 vulture = "^2.7"
 pre-commit = "^4.2.0"
+pytest = "^8.2.1"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.0"
