@@ -1,0 +1,14 @@
+site_name: BSG Stroke Classifier
+site_description: Documentation for stroke prediction project.
+site_author: Borja Serrano Gonzalez
+repo_url: https://github.com/borja-sg/BSG-TestDataScience-1/
+theme:
+  name: material
+  palette:
+    scheme: default
+  features:
+    - navigation.tabs
+    - content.code.copy
+
+nav:
+  - Home: index.md
