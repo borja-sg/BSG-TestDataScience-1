@@ -1,0 +1,38 @@
+[project]
+name = "bsg-testdatascience-1"
+version = "0.1.0"
+description = "Stroke prediction classifier."
+authors = [
+    {name = "Borja Serrano Gonzalez", email="borja.serranog@gmail.com"},
+]
+packages = [
+  { include = "bsg_testdatascience" }
+]
+license = {text = "GPL-3.0-or-later"}
+readme = "README.md"
+requires-python = "3.12.11"
+dependencies = [
+    "pandas (>=2.3.0,<3.0.0)",
+    "numpy (>=2.3.1,<3.0.0)",
+    "scikit-learn (>=1.7.0,<2.0.0)",
+    "matplotlib (>=3.10.3,<4.0.0)",
+    "seaborn (>=0.13.2,<0.14.0)",
+    "plotly (>=6.1.2,<7.0.0)",
+    "ipykernel (>=6.29.5,<7.0.0)",
+    "optuna (>=4.4.0,<5.0.0)",
+    "mlflow (>=3.1.0,<4.0.0)",
+    "joblib (>=1.5.1,<2.0.0)",
+    "xgboost (>=3.0.2,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core==2.1.3"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.3.0"
+ruff = "^0.4.4"
+mypy = "^1.10.0"
+vulture = "^2.7"
+pre-commit = "^4.2.0"
