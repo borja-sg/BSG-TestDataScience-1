@@ -89,7 +89,7 @@ def test_save_to_hdf_invalid_mode(
     # invalid_mode = "x"  # Explicitly declare the invalid mode as a Literal
     # Use an invalid mode
     invalid_mode = "x"
-    with pytest.raises(ValueError, match="Mode must be either 'a' or 'w', 'r+'"):
+    with pytest.raises(ValueError, match=r"Mode must be either 'a' or 'w', 'r\+'"):
         save_to_hdf(df=sample_dataframe, path=temp_hdf_path, key="test_data", mode=invalid_mode)  # type: ignore[arg-type]
 
 
