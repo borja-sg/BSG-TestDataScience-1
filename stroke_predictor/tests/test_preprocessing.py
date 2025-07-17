@@ -12,7 +12,7 @@ from stroke_predictor.utils.preprocessing import (
 
 
 @pytest.fixture
-def sample_dataframe():
+def sample_dataframe() -> pd.DataFrame:
     """Fixture to provide a sample DataFrame for testing."""
     return pd.DataFrame(
         {
@@ -24,12 +24,12 @@ def sample_dataframe():
 
 
 @pytest.fixture
-def categorical_dataframe():
+def categorical_dataframe() -> pd.DataFrame:
     """Fixture to provide a sample DataFrame with categorical data."""
     return pd.DataFrame({"cat_1": ["A", "B", "C", "A"], "cat_2": ["X", "Y", "Z", "X"]})
 
 
-def test_drop_rows_with_missing(sample_dataframe):
+def test_drop_rows_with_missing(sample_dataframe: pd.DataFrame) -> None:
     """Test the drop_rows_with_missing function."""
     result = drop_rows_with_missing(
         sample_dataframe, column="feature_1", missing_value=np.nan
@@ -37,7 +37,7 @@ def test_drop_rows_with_missing(sample_dataframe):
     assert result.shape[1] == 3, "Rows with missing values were not dropped correctly."
 
 
-def test_replace_missing_to_value(sample_dataframe):
+def test_replace_missing_to_value(sample_dataframe: pd.DataFrame) -> None:
     """Test the replace_missing_to_value function."""
     result = replace_missing_to_value(
         sample_dataframe, column="feature_1", missing_value=np.nan, new_value=0
@@ -48,7 +48,7 @@ def test_replace_missing_to_value(sample_dataframe):
     assert (result["feature_1"] == 0).sum() == 1, "Replacement value is incorrect."
 
 
-def test_encode_categorical(categorical_dataframe):
+def test_encode_categorical(categorical_dataframe: pd.DataFrame) -> None:
     """Test the encode_categorical function."""
     result, encoder = encode_categorical(
         categorical_dataframe, columns=["cat_1", "cat_2"]
@@ -59,7 +59,7 @@ def test_encode_categorical(categorical_dataframe):
     assert result["cat_2"].max() <= 2, "Encoding is incorrect."
 
 
-def test_impute_missing_knn(sample_dataframe):
+def test_impute_missing_knn(sample_dataframe: pd.DataFrame) -> None:
     """Test the impute_missing_knn function."""
     result = impute_missing_knn(sample_dataframe, columns=["feature_1"], n_neighbors=2)
     assert (
@@ -67,7 +67,7 @@ def test_impute_missing_knn(sample_dataframe):
     ), "Missing values were not imputed correctly."
 
 
-def test_split_and_rebuild_dataframe(sample_dataframe):
+def test_split_and_rebuild_dataframe(sample_dataframe: pd.DataFrame) -> None:
     """Test the split_and_rebuild_dataframe function."""
     df_train, df_test = split_and_rebuild_dataframe(
         sample_dataframe, target_column="target", test_size=0.5

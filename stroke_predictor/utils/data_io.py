@@ -1,14 +1,15 @@
 from pathlib import Path
 import pandas as pd
+from typing import Literal
 
 
-def load_csv_dataset(path):
+def load_csv_dataset(path: Path) -> pd.DataFrame:
     """
     Load a CSV file as a pandas DataFrame. Raises an error if the file does not exist.
 
     Parameters
     ----------
-    path : str or Path
+    path : str
         Path to the CSV file.
 
     Returns
@@ -20,20 +21,23 @@ def load_csv_dataset(path):
     ------
     FileNotFoundError
         If the specified file does not exist.
+    ValueError
+        If the path is not a file (e.g., a directory).
     """
-    # Convert to path
-    path = Path(path)
+
     # Check if the path exists and is a file
     if not path.exists():
         raise FileNotFoundError(f"The file '{path}' does not exist.")
-    # Check if the path is a file
     if not path.is_file():
         raise ValueError(f"'{path}' is not a file (may be a directory).")
-    # Return the DataFrame
+
+    # Load and return the DataFrame
     return pd.read_csv(path)
 
 
-def save_to_hdf(df, path, key, mode="a"):
+def save_to_hdf(
+    df: pd.DataFrame, path: Path, key: str, mode: Literal["a", "w", "r+"]
+) -> None:
     """
     Save a DataFrame to an HDF5 file.
 
@@ -41,22 +45,35 @@ def save_to_hdf(df, path, key, mode="a"):
     ----------
     df : pd.DataFrame
         DataFrame to save.
-    path : str or Path
+    path : Path
         Destination HDF5 file path.
     key : str
         Key under which the DataFrame is stored.
     mode : str, optional
         Mode to open the file ('w' for write, 'a' for append), by default 'a'.
+
+    Raises
+    ------
+    ValueError
+        If the mode is not 'w' or 'a'.
+    TypeError
+        If the key is not a string.
     """
-    # Convert to path
-    path = Path(path)
+
     # Create parent directories if they don't exist
     path.parent.mkdir(parents=True, exist_ok=True)
-    # Raise ValueError if the mode is not 'w' or 'a'
-    if mode not in ["w", "a"]:
-        raise ValueError("Mode must be either 'a' or 'w'")
-    # Ensure the key is valid
+
+    # Validate mode
+    if mode not in ["w", "a", "r+"]:
+        raise ValueError("Mode must be either 'a' or 'w', 'r+'")
+
+    # Validate key
     if not isinstance(key, str):
         raise TypeError("Key must be a string")
-    # Save it
+
+    # Check if the path folder exists
+    if not path.parent.exists():
+        raise FileNotFoundError(f"The directory '{path.parent}' does not exist.")
+
+    # Save the DataFrame to HDF5
     df.to_hdf(path, key=key, mode=mode, format="table")

@@ -11,7 +11,7 @@ from stroke_predictor.utils.plotting import (
 
 
 @pytest.fixture
-def sample_dataframe():
+def sample_dataframe() -> pd.DataFrame:
     """Fixture to provide a sample DataFrame for testing."""
     return pd.DataFrame(
         {
@@ -24,7 +24,7 @@ def sample_dataframe():
 
 
 @pytest.fixture
-def sample_series_list():
+def sample_series_list() -> list:
     """Fixture to provide a list of sample Series for testing."""
     return [
         pd.Series(np.random.normal(0, 1, 100)),
@@ -33,18 +33,18 @@ def sample_series_list():
 
 
 @pytest.fixture
-def sample_labels():
+def sample_labels() -> list:
     """Fixture to provide labels for testing."""
     return ["Series 1", "Series 2"]
 
 
 @pytest.fixture
-def sample_colors():
+def sample_colors() -> list:
     """Fixture to provide colors for testing."""
     return ["blue", "green"]
 
 
-def test_plot_distribution(sample_dataframe):
+def test_plot_distribution(sample_dataframe: pd.DataFrame) -> None:
     """Test the plot_distribution function."""
     try:
         plot_distribution(
@@ -59,7 +59,7 @@ def test_plot_distribution(sample_dataframe):
         pytest.fail(f"plot_distribution failed with error: {e}")
 
 
-def test_plot_pairwise(sample_dataframe):
+def test_plot_pairwise(sample_dataframe: pd.DataFrame) -> None:
     """Test the plot_pairwise function."""
     try:
         plot_pairwise(df=sample_dataframe, hue="categorical", height=2.5)
@@ -67,7 +67,7 @@ def test_plot_pairwise(sample_dataframe):
         pytest.fail(f"plot_pairwise failed with error: {e}")
 
 
-def test_plot_categorical_counts(sample_dataframe):
+def test_plot_categorical_counts(sample_dataframe: pd.DataFrame) -> None:
     """Test the plot_categorical_counts function."""
     try:
         plot_categorical_counts(
@@ -81,7 +81,9 @@ def test_plot_categorical_counts(sample_dataframe):
         pytest.fail(f"plot_categorical_counts failed with error: {e}")
 
 
-def test_plot_variable_distributions(sample_series_list, sample_labels, sample_colors):
+def test_plot_variable_distributions(
+    sample_series_list: list, sample_labels: list, sample_colors: list
+) -> None:
     """Test the plot_variable_distributions function."""
     try:
         plot_variable_distributions(
@@ -98,7 +100,7 @@ def test_plot_variable_distributions(sample_series_list, sample_labels, sample_c
         pytest.fail(f"plot_variable_distributions failed with error: {e}")
 
 
-def test_plot_correlation_heatmap(sample_dataframe):
+def test_plot_correlation_heatmap(sample_dataframe: pd.DataFrame) -> None:
     """Test the plot_correlation_heatmap function."""
     try:
         corr_matrix = plot_correlation_heatmap(

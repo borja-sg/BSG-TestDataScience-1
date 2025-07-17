@@ -1,18 +1,23 @@
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import train_test_split
+from typing import Any, List, Tuple
+import pandas as pd
 
 
-def drop_rows_with_missing(df, column, missing_value):
+def drop_rows_with_missing(
+    df: pd.DataFrame, column: str, missing_value: Any
+) -> pd.DataFrame:
     """
     Drop rows with missing values in specified columns.
+
     Parameters
     ----------
     df : pd.DataFrame
         Input DataFrame.
     column : str
         Column name to check for missing values.
-    missing_value : any
+    missing_value : Any
         Value to consider as missing (e.g., np.nan).
 
     Returns
@@ -20,14 +25,17 @@ def drop_rows_with_missing(df, column, missing_value):
     pd.DataFrame
         DataFrame with rows containing missing values in specified columns removed.
     """
-    # Make a copy to avoid modifying the original DataFrame
-    df_dropped = df.copy()
+    if column not in df.columns:
+        raise ValueError(f"Column '{column}' not found in DataFrame.")
+
     # Drop rows where the specified column has the missing value
-    df_dropped.drop(df_dropped[df_dropped[column] == missing_value].index, inplace=True)
+    df_dropped = df[df[column] != missing_value].copy()
     return df_dropped
 
 
-def replace_missing_to_value(df, column, missing_value, new_value):
+def replace_missing_to_value(
+    df: pd.DataFrame, column: str, missing_value: Any, new_value: Any
+) -> pd.DataFrame:
     """
     Replace missing values in specified columns with a given value.
 
@@ -37,9 +45,9 @@ def replace_missing_to_value(df, column, missing_value, new_value):
         Input DataFrame.
     column : str
         Column name to process.
-    missing_value : any
+    missing_value : Any
         Value to consider as missing (e.g., np.nan).
-    new_value : any
+    new_value : Any
         Value to replace missing values with.
 
     Returns
@@ -47,12 +55,18 @@ def replace_missing_to_value(df, column, missing_value, new_value):
     pd.DataFrame
         DataFrame with specified missing values replaced.
     """
+    if column not in df.columns:
+        raise ValueError(f"Column '{column}' not found in DataFrame.")
+
+    # Replace missing values in the specified column
     df_replaced = df.copy()
     df_replaced[column] = df_replaced[column].replace(missing_value, new_value)
     return df_replaced
 
 
-def encode_categorical(df, columns):
+def encode_categorical(
+    df: pd.DataFrame, columns: List[str]
+) -> Tuple[pd.DataFrame, OrdinalEncoder]:
     """
     Apply Ordinal Encoding to specified columns.
 
@@ -70,13 +84,19 @@ def encode_categorical(df, columns):
     OrdinalEncoder
         Fitted encoder object.
     """
+    if not all(col in df.columns for col in columns):
+        missing_cols = [col for col in columns if col not in df.columns]
+        raise ValueError(f"Columns {missing_cols} not found in DataFrame.")
+
     encoder = OrdinalEncoder()
     df_encoded = df.copy()
     df_encoded[columns] = encoder.fit_transform(df[columns])
     return df_encoded, encoder
 
 
-def impute_missing_knn(df, columns, n_neighbors=5):
+def impute_missing_knn(
+    df: pd.DataFrame, columns: List[str], n_neighbors: int = 5
+) -> pd.DataFrame:
     """
     Impute missing values using KNN imputation.
 
@@ -94,6 +114,10 @@ def impute_missing_knn(df, columns, n_neighbors=5):
     pd.DataFrame
         DataFrame with imputed values.
     """
+    if not all(col in df.columns for col in columns):
+        missing_cols = [col for col in columns if col not in df.columns]
+        raise ValueError(f"Columns {missing_cols} not found in DataFrame.")
+
     imputer = KNNImputer(n_neighbors=n_neighbors)
     df_imputed = df.copy()
     df_imputed[columns] = imputer.fit_transform(df[columns])
@@ -101,8 +125,12 @@ def impute_missing_knn(df, columns, n_neighbors=5):
 
 
 def split_and_rebuild_dataframe(
-    df, target_column, test_size=0.3, random_state=42, stratify=True
-):
+    df: pd.DataFrame,
+    target_column: str,
+    test_size: float = 0.3,
+    random_state: int = 42,
+    stratify: bool = True,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Split a DataFrame into train and test sets, and return both with the target column included.
 
@@ -121,11 +149,12 @@ def split_and_rebuild_dataframe(
 
     Returns
     -------
-    df_train : pd.DataFrame
-        Training set including the target column.
-    df_test : pd.DataFrame
-        Test set including the target column.
+    Tuple[pd.DataFrame, pd.DataFrame]
+        Training and test sets including the target column.
     """
+    if target_column not in df.columns:
+        raise ValueError(f"Target column '{target_column}' not found in DataFrame.")
+
     X = df.drop(columns=[target_column])
     y = df[target_column]
 

@@ -2,9 +2,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+from typing import Optional, List, Tuple
 
 
-def plot_distribution(df, column, hue=None, stat="count", bins=30, title=None):
+def plot_distribution(
+    df: pd.DataFrame,
+    column: str,
+    hue: Optional[str] = None,
+    stat: str = "count",
+    bins: int = 30,
+    title: Optional[str] = None,
+) -> None:
     """
     Plot the distribution of a continuous variable using seaborn.histplot.
 
@@ -38,7 +46,9 @@ def plot_distribution(df, column, hue=None, stat="count", bins=30, title=None):
     plt.show()
 
 
-def plot_pairwise(df, hue=None, height=2.5):
+def plot_pairwise(
+    df: pd.DataFrame, hue: Optional[str] = None, height: float = 2.5
+) -> None:
     """
     Create a pairplot for visualizing pairwise relationships in a dataset.
 
@@ -57,8 +67,14 @@ def plot_pairwise(df, hue=None, height=2.5):
 
 
 def plot_categorical_counts(
-    df, column, hue=None, normalize=False, title=None, y_log=False, output_path=None
-):
+    df: pd.DataFrame,
+    column: str,
+    hue: Optional[str] = None,
+    normalize: bool = False,
+    title: Optional[str] = None,
+    y_log: bool = False,
+    output_path: Optional[str] = None,
+) -> None:
     """
     Plot the counts of a categorical column using seaborn.countplot.
 
@@ -102,18 +118,18 @@ def plot_categorical_counts(
 
 
 def plot_variable_distributions(
-    series_list,
-    labels,
-    colors,
-    alpha_list=None,
-    bins="auto",
-    kde=True,
-    xlabel=None,
-    ylabel="Normalized counts",
-    title=None,
-    output_path=None,
-    stat="density",
-):
+    series_list: List[pd.Series],
+    labels: List[str],
+    colors: List[str],
+    alpha_list: Optional[List[float]] = None,
+    bins: Optional[int] = 30,
+    kde: bool = True,
+    xlabel: Optional[str] = None,
+    ylabel: str = "Normalized counts",
+    title: Optional[str] = None,
+    output_path: Optional[str] = None,
+    stat: str = "density",
+) -> None:
     """
     Plot overlaid distributions of several variable series using histograms with optional KDE.
 
@@ -127,8 +143,8 @@ def plot_variable_distributions(
         Colors to use for each series.
     alpha_list : list of float, optional
         Transparency levels for each histogram. Defaults to 0.5 for all if not specified.
-    bins : int or sequence or str, optional
-        Binning strategy for histograms (e.g., "auto", int, np.linspace, etc.). Default is "auto".
+    bins : int
+        Binning strategy for histograms.
     kde : bool, optional
         Whether to overlay a KDE curve. Default is True.
     xlabel : str, optional
@@ -152,17 +168,13 @@ def plot_variable_distributions(
     if isinstance(bins, (int, str)):
         combined = pd.concat(series_list)
         min_val, max_val = combined.min(), combined.max()
-        bins = (
-            np.linspace(min_val, max_val, 30)
-            if isinstance(bins, str) or bins == "auto"
-            else bins
-        )
+        bins_range = np.linspace(min_val, max_val, bins)
 
     for series, label, color, alpha in zip(series_list, labels, colors, alpha_list):
         sns.histplot(
             series.dropna(),
             kde=kde,
-            bins=bins,
+            bins=bins_range,
             color=color,
             alpha=alpha,
             stat=stat,
@@ -183,12 +195,12 @@ def plot_variable_distributions(
 
 
 def plot_correlation_heatmap(
-    df,
-    title="Correlation Heatmap of Continuous Variables",
-    figsize=(10, 8),
-    cmap="coolwarm",
-    output_path=None,
-):
+    df: pd.DataFrame,
+    title: str = "Correlation Heatmap of Continuous Variables",
+    figsize: Tuple[int, int] = (10, 8),
+    cmap: str = "coolwarm",
+    output_path: Optional[str] = None,
+) -> pd.DataFrame:
     """
     Plot a heatmap showing the correlation matrix between continuous (numeric) variables.
 
