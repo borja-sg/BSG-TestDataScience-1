@@ -27,7 +27,9 @@ dependencies = [
     "jupyter (>=1.1.1,<2.0.0)",
     "imblearn (>=0.0,<0.1)",
     "tables (>=3.10.2,<4.0.0)",
-    "h5py (>=3.14.0,<4.0.0)"
+    "h5py (>=3.14.0,<4.0.0)",
+    "pandas-stubs (>=2.3.0.250703,<3.0.0.0)",
+    "types-seaborn (>=0.13.2.20250516,<0.14.0.0)"
 ]
 
 
@@ -47,3 +49,8 @@ pytest = "^8.2.1"
 mkdocs = "^1.6.0"
 mkdocs-material = "^9.5.21"
 mkdocstrings = {extras = ["python"], version = "^0.29.1"}
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+disallow_untyped_defs = true
