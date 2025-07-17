@@ -14,6 +14,8 @@
       
       
       
+        <link rel="next" href="api/">
+      
       
       <link rel="icon" href="assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
@@ -46,6 +48,8 @@
       
     
     
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
     <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -70,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#bsg-stroke-classifier" class="md-skip">
           Skip to content
         </a>
       
@@ -204,6 +208,25 @@
   
 
       
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="api/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -306,18 +329,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#project-overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands
+      Project Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
+  <a href="#project-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Project layout
+      Project Structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Use
     </span>
   </a>
   
@@ -327,6 +368,28 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -358,18 +421,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#project-overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands
+      Project Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
+  <a href="#project-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Project layout
+      Project Structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Use
     </span>
   </a>
   
@@ -394,21 +475,55 @@
   
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+<h1 id="bsg-stroke-classifier">BSG Stroke Classifier</h1>
+<p>Welcome to the documentation for the <strong>BSG Stroke Classifier</strong>, a machine learning project designed to predict the likelihood of stroke events using patient medical records. This project focuses on the analysis, preprocessing, and modeling of healthcare data to build a reliable binary classifier.</p>
+<hr />
+<h2 id="project-overview">Project Overview</h2>
+<p>The goal of this project is to explore a healthcare dataset and build an end-to-end classification pipeline for stroke prediction. It includes:</p>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li><strong>Data cleaning</strong> and imputation of missing values.</li>
+<li><strong>Exploratory Data Analysis (EDA)</strong> to understand feature relationships.</li>
+<li><strong>Preprocessing</strong>, including encoding and scaling.</li>
+<li><strong>Machine learning modeling</strong> using classification algorithms.</li>
+<li><strong>Evaluation metrics</strong> to assess performance.</li>
+<li>A clean and <strong>reproducible structure</strong> using Python, Poetry, and MkDocs.</li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+<hr />
+<h2 id="project-structure">Project Structure</h2>
+<pre><code class="language-bash">bsg-testdatascience-1/
+├── data/ # Raw and processed data files
+├── docs/ # Documentation (MkDocs)
+├── notebooks/ # EDA and experimentation notebooks
+├── stroke_predictor/ # Source code and utility functions
+│ ├── utils/ # Preprocessing, plotting, and I/O helpers
+│ └── tests/ # Unit tests
+├── pyproject.toml # Poetry config
+├── mkdocs.yml # MkDocs config
+└── README.md # Project overview
 </code></pre>
+<hr />
+<h2 id="documentation-contents">Documentation Contents</h2>
+<ul>
+<li><strong>Exploratory Data Analysis</strong> – Summary statistics, visualizations, and patterns in the dataset.</li>
+<li><strong>Preprocessing Utilities</strong> – Code for missing value imputation, encoding, and normalization.</li>
+<li><strong>Modeling Pipeline</strong> – Train/test splits, model training, and evaluation.</li>
+<li><strong>Testing</strong> – Unit tests for critical components.</li>
+<li><strong>API Reference</strong> – Autogenerated from code docstrings using MkDocs + <code>mkdocstrings</code>.</li>
+</ul>
+<hr />
+<h2 id="how-to-use">How to Use</h2>
+<ol>
+<li>Clone the repository:</li>
+</ol>
+<pre><code class="language-bash">git clone https://github.com/borja-sg/BSG-TestDataScience-1
+cd BSG-TestDataScience-1
+</code></pre>
+<p>2.Install dependencies using Poetry:</p>
+<pre><code class="language-bash">poetry install
+</code></pre>
+<ol>
+<li>Run the notebooks or scripts from the root folder.</li>
+</ol>
 
 
 
