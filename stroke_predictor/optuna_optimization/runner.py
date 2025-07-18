@@ -22,7 +22,7 @@ def run_optimization(config_path: str) -> optuna.Study:
     # Load data
     X, y = load_dataset(
         path=Path(data_config["data_path"]),
-        key=data_config["hdf5_key_test"],
+        key=data_config["hdf5_key_train"],
         target=data_config["target"],
     )
 
