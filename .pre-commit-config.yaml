@@ -14,7 +14,11 @@ repos:
     rev: v1.10.0
     hooks:
       - id: mypy
-        args: ['--explicit-package-bases']
+        args: [
+          "--explicit-package-bases",
+          "--install-types",
+          "--non-interactive"
+        ]
 
   - repo: https://github.com/jendrikseipp/vulture
     rev: v2.7
