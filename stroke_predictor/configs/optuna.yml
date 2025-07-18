@@ -1,0 +1,47 @@
+global:
+  seed: 42
+  metric: "f1" # or "f1_score" or "roc_auc"
+  direction: "maximize"
+  verbose: true
+
+storage:
+  data_path: "./data/stroke_data.h5"
+  hdf5_key_train: "Train"
+  hdf5_key_test: "Test"
+  target: "stroke"
+
+optuna:
+  n_trials: 500
+  timeout: null
+  study_name: "stroke_prediction_optimization"
+  sampler: "TPESampler"
+  pruner: "MedianPruner"
+  storage: "sqlite:///outputs/optuna_stroke_prediction.db"
+  output_csv: "outputs/optuna_stroke_prediction_results.csv"
+
+models:
+  RandomForest:
+    n_estimators: {low: 10, high: 500}
+    max_depth: {low: 2, high: 20}
+  LogisticRegression:
+    C: {low: 0.0001, high: 100.0, log: true}
+    max_iter: {low: 100, high: 1000}
+  SVC:
+    svc_C: {low: 0.0001, high: 100.0, log: true}
+    kernel: {values: ["linear", "rbf"]}
+  MLP:
+    n_layers:
+      low: 1
+      high: 3
+    n_neurons:
+      low: 16
+      high: 128
+    alpha:
+      low: 0.00001
+      high: 0.1
+      log: true
+    max_iter: 1000
+  XGBoost:
+    xgb_n_estimators: {low: 10, high: 500}
+    xgb_max_depth: {low: 3, high: 20}
+    xgb_lr: {low: 0.01, high: 0.3, log: true}
