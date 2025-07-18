@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-from typing import Literal
+from typing import Literal, Tuple
 
 
 def load_csv_dataset(path: Path) -> pd.DataFrame:
@@ -77,3 +77,42 @@ def save_to_hdf(
 
     # Save the DataFrame to HDF5
     df.to_hdf(path, key=key, mode=mode, format="table")
+
+
+def load_dataset(path: Path, key: str, target: str) -> Tuple:
+    """
+    Load a DataFrame from an HDF5 file.
+
+    Parameters
+    ----------
+    path : Path
+        Path to the HDF5 file.
+    key : str
+        Key under which the DataFrame is stored.
+    target : str
+        Name of the target variable column in the DataFrame.
+
+    Returns
+    -------
+    x : np.ndarray
+        Features from the DataFrame.
+    y : np.ndarray
+        Target variable from the DataFrame."""
+
+    # Check if the path exists and is a file
+    if not path.exists():
+        raise FileNotFoundError(f"The file '{path}' does not exist.")
+    if not path.is_file():
+        raise ValueError(f"'{path}' is not a file (may be a directory).")
+
+    # Load and return the DataFrame from HDF5
+    df = pd.read_hdf(path, key=key)
+
+    # Check if the target column exists in the DataFrame
+    if target not in df.columns:
+        raise ValueError(f"Target column '{target}' not found in the DataFrame.")
+
+    # Separate features and target variable
+    x = df.drop(columns=[target]).values
+    y = df[target].values
+    return x, y

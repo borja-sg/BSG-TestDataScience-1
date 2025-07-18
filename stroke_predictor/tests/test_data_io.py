@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-from stroke_predictor.utils.data_io import load_csv_dataset, save_to_hdf
+from stroke_predictor.utils.data_io import load_csv_dataset, save_to_hdf, load_dataset
 
 
 @pytest.fixture
@@ -111,3 +111,59 @@ def test_save_to_hdf_invalid_key(
     """Test invalid key type raises TypeError."""
     with pytest.raises(TypeError, match="Key must be a string"):
         save_to_hdf(df=sample_dataframe, path=temp_hdf_path, key=123, mode="w")  # type: ignore
+
+
+@pytest.fixture
+def temp_hdf(tmp_path: Path) -> Path:
+    """Create a temporary HDF5 file for testing."""
+    hdf_path = tmp_path / "test_data.h5"
+    df = pd.DataFrame(
+        {
+            "feature_1": [1, 2, 3, 4],
+            "feature_2": [5, 6, 7, 8],
+            "target": [0, 1, 0, 1],
+        }
+    )
+    df.to_hdf(hdf_path, key="test_key", mode="w")
+    return hdf_path
+
+
+def test_load_dataset_valid(temp_hdf: Path) -> None:
+    """Test loading a valid dataset."""
+    x, y = load_dataset(path=temp_hdf, key="test_key", target="target")
+    assert isinstance(x, np.ndarray), "Features (x) are not a numpy array."
+    assert isinstance(y, np.ndarray), "Target (y) is not a numpy array."
+    assert x.shape == (4, 2), "Features (x) shape is incorrect."
+    assert y.shape == (4,), "Target (y) shape is incorrect."
+    assert y.tolist() == [0, 1, 0, 1], "Target values are incorrect."
+
+
+def test_load_dataset_missing_file(tmp_path: Path) -> None:
+    """Test loading a dataset from a missing file."""
+    missing_path = tmp_path / "missing.h5"
+    with pytest.raises(FileNotFoundError, match="The file '.*' does not exist."):
+        load_dataset(path=missing_path, key="test_key", target="target")
+
+
+def test_load_dataset_invalid_file(tmp_path: Path) -> None:
+    """Test loading a dataset from an invalid file."""
+    invalid_path = tmp_path / "invalid_dir"
+    invalid_path.mkdir()  # Create a directory instead of a file
+    with pytest.raises(ValueError, match="'.*' is not a file .*"):
+        load_dataset(path=invalid_path, key="test_key", target="target")
+
+
+def test_load_dataset_missing_key(temp_hdf: Path) -> None:
+    """Test loading a dataset with a missing key."""
+    # Attempt to load a key that does not exist in the HDF5 file
+    missing_key = "missing_key"
+    with pytest.raises(
+        KeyError, match="No object named " + missing_key + " in the file"
+    ):
+        load_dataset(path=temp_hdf, key=missing_key, target="target")
+
+
+def test_load_dataset_missing_target(temp_hdf: Path) -> None:
+    """Test loading a dataset with a missing target column."""
+    with pytest.raises(ValueError, match="Target column 'missing_target' not found .*"):
+        load_dataset(path=temp_hdf, key="test_key", target="missing_target")
