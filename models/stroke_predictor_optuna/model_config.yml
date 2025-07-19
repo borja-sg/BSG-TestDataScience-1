@@ -1,0 +1,10 @@
+global:
+  seed: 42
+
+storage:
+  data_path: "./data/stroke_data.h5"
+  hdf5_key_train: "Train"
+  hdf5_key_test: "Test"
+  target: "stroke"
+  model_output: "./models/stroke_predictor_optuna/"
+  variable_encoder_path: "./data/stroke_data_encoder.pkl"
