@@ -29,7 +29,9 @@ dependencies = [
     "h5py (>=3.14.0,<4.0.0)",
     "pandas-stubs (>=2.3.0.250703,<3.0.0.0)",
     "types-seaborn (>=0.13.2.20250516,<0.14.0.0)",
-    "imbalanced-learn (>=0.13.0,<0.14.0)"
+    "imbalanced-learn (>=0.13.0,<0.14.0)",
+    "uvicorn[standard] (>=0.35.0,<0.36.0)",
+    "python-multipart (>=0.0.20,<0.0.21)"
 ]
 
 
