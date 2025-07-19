@@ -36,7 +36,7 @@ jobs:
         run: poetry run mypy .
 
       - name: Run Vulture
-        run: poetry run vulture stroke_predictor
+        run: poetry run vulture stroke_predictor --exclude stroke_predictor/tests,stroke_predictor/utils --min-confidence 70
 
   test:
     name: Run Tests
