@@ -9,9 +9,10 @@ storage:
   hdf5_key_train: "Train"
   hdf5_key_test: "Test"
   target: "stroke"
+  model_output: "./models/stroke_predictor_optuna/"
 
 optuna:
-  n_trials: 500
+  n_trials: 1000
   timeout: null
   study_name: "stroke_prediction_optimization"
   sampler: "TPESampler"
