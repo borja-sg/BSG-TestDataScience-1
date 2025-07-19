@@ -4,7 +4,12 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-from stroke_predictor.utils.data_io import load_csv_dataset, save_to_hdf, load_dataset
+from stroke_predictor.utils.data_io import (
+    load_csv_dataset,
+    save_to_hdf,
+    load_dataset,
+    load_column_names,
+)
 
 
 @pytest.fixture
@@ -167,3 +172,47 @@ def test_load_dataset_missing_target(temp_hdf: Path) -> None:
     """Test loading a dataset with a missing target column."""
     with pytest.raises(ValueError, match="Target column 'missing_target' not found .*"):
         load_dataset(path=temp_hdf, key="test_key", target="missing_target")
+
+
+@pytest.fixture
+def temp_hdf_without_target(tmp_path: Path) -> Path:
+    """Create a temporary HDF5 file for testing without the 'stroke' column."""
+    hdf_path = tmp_path / "test_data_no_target.h5"
+    df = pd.DataFrame(
+        {
+            "feature_1": [1, 2, 3, 4],
+            "feature_2": [5, 6, 7, 8],
+        }
+    )
+    df.to_hdf(hdf_path, key="test_key", mode="w")
+    return hdf_path
+
+
+def test_load_column_names_valid(temp_hdf_without_target: Path) -> None:
+    """Test loading column names from a valid HDF5 file."""
+    column_names = load_column_names(path=temp_hdf_without_target, key="test_key")
+    expected_columns = ["feature_1", "feature_2"]  # No 'stroke' column in this fixture
+    assert (
+        column_names == expected_columns
+    ), "Column names do not match expected values."
+
+
+def test_load_column_names_missing_file(tmp_path: Path) -> None:
+    """Test loading column names from a missing file."""
+    missing_path = tmp_path / "missing.h5"
+    with pytest.raises(FileNotFoundError, match="The file '.*' does not exist."):
+        load_column_names(path=missing_path, key="test_key")
+
+
+def test_load_column_names_invalid_file(tmp_path: Path) -> None:
+    """Test loading column names from an invalid file."""
+    invalid_path = tmp_path / "invalid_dir"
+    invalid_path.mkdir()  # Create a directory instead of a file
+    with pytest.raises(ValueError, match="'.*' is not a file .*"):
+        load_column_names(path=invalid_path, key="test_key")
+
+
+def test_load_column_names_missing_key(temp_hdf_without_target: Path) -> None:
+    """Test loading column names with a missing key."""
+    with pytest.raises(KeyError, match="No object named missing_key in the file"):
+        load_column_names(path=temp_hdf_without_target, key="missing_key")

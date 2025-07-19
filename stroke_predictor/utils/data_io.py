@@ -116,3 +116,35 @@ def load_dataset(path: Path, key: str, target: str) -> Tuple:
     x = df.drop(columns=[target]).values
     y = df[target].values
     return x, y
+
+
+def load_column_names(path: Path, key: str) -> list:
+    """
+    Load column names from an HDF5 file.
+
+    Parameters
+    ----------
+    path : Path
+        Path to the HDF5 file.
+    key : str
+        Key under which the DataFrame is stored.
+
+    Returns
+    -------
+    list
+        List of column names in the DataFrame.
+    """
+
+    # Check if the path exists and is a file
+    if not path.exists():
+        raise FileNotFoundError(f"The file '{path}' does not exist.")
+    if not path.is_file():
+        raise ValueError(f"'{path}' is not a file (may be a directory).")
+
+    # Load the DataFrame and return its columns
+    df = pd.read_hdf(path, key=key)
+
+    # Drop stroke
+    if "stroke" in df.columns:
+        df = df.drop("stroke", axis=1)  # Exclude stroke column if it exists
+    return df.columns.tolist()
