@@ -24,4 +24,6 @@ repos:
     rev: v2.7
     hooks:
       - id: vulture
-        args: [stroke_predictor]
+        args:
+          - stroke_predictor
+          - --exclude=stroke_predictor/tests,stroke_predictor/utils

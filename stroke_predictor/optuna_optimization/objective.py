@@ -97,9 +97,15 @@ def objective(
 
     elif classifier_name == "MLP":
         n_layers = suggest_param(trial, config["n_layers"], "n_layers")
-        n_neurons = suggest_param(trial, config["n_neurons"], "n_neurons")
 
-        hidden_layer_sizes = tuple([n_neurons] * n_layers)
+        # For each layer, suggest the number of neurons separately
+        n_neurons_list = []
+        for i in range(n_layers):
+            n_neurons_list.append(
+                suggest_param(trial, config["n_neurons"], f"n_neurons_layer_{i}")
+            )
+
+        hidden_layer_sizes = tuple(n_neurons_list)
 
         model = MLPClassifier(
             hidden_layer_sizes=hidden_layer_sizes,
