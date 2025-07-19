@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stroke Prediction</title>
+    <style>
+        body {
+            font-family: Arial; 
+            margin: 40px; 
+            text-align: center;  /* Add this line */
+        }
+        table { 
+            width: 100%; 
+            max-width: 600px; 
+            margin: 0 auto 20px auto; /* center the table */
+            text-align: left;  /* Keep text inside table left aligned for readability */
+        }
+        td { 
+            padding: 5px; 
+        }
+        .result { 
+            font-weight: bold; 
+            color: green; 
+            margin-top: 20px; 
+        }
+    </style>
+</head>
+<body>
+    <h2>Stroke Risk Prediction</h2>
+    <form method="post">
+        <table>
+            <tr><td>Age:</td><td><input name="age" type="number" required></td></tr>
+            <tr><td>Hypertension:</td><td><select name="hypertension"><option value="0">No</option><option value="1">Yes</option></select></td></tr>
+            <tr><td>Heart Disease:</td><td><select name="heart_disease"><option value="0">No</option><option value="1">Yes</option></select></td></tr>
+            <tr><td>Avg Glucose Level:</td><td><input name="avg_glucose_level" type="number" required></td></tr>
+            <tr><td>BMI:</td><td><input name="bmi" type="number" required></td></tr>
+            <tr><td>Gender:</td><td><select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></td></tr>
+            <tr><td>Ever Married:</td><td><select name="ever_married"><option>Yes</option><option>No</option></select></td></tr>
+            <tr><td>Work Type:</td><td><select name="work_type">
+                <option>Private</option><option>Self-employed</option><option>Govt_job</option><option>children</option><option>Never_worked</option>
+            </select></td></tr>
+            <tr><td>Residence Type:</td><td><select name="Residence_type"><option>Urban</option><option>Rural</option></select></td></tr>
+            <tr><td>Smoking Status:</td><td><select name="smoking_status">
+                <option>formerly smoked</option><option>never smoked</option><option>smokes</option><option>Unknown</option>
+            </select></td></tr>
+        </table>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if result %}
+        <div class="result">{{ result }}</div>
+    {% endif %}
+</body>
+</html>

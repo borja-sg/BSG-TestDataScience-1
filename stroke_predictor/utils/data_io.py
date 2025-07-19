@@ -1,6 +1,10 @@
 from pathlib import Path
 import pandas as pd
-from typing import Literal, Tuple
+from typing import Literal, Tuple, Any
+import yaml
+import os
+import joblib
+import mlflow
 
 
 def load_csv_dataset(path: Path) -> pd.DataFrame:
@@ -148,3 +152,80 @@ def load_column_names(path: Path, key: str) -> list:
     if "stroke" in df.columns:
         df = df.drop("stroke", axis=1)  # Exclude stroke column if it exists
     return df.columns.tolist()
+
+
+def load_config(model_path: str) -> dict:
+    """Load model configuration and related resources."""
+    config_path = Path(model_path) / "model_config.yml"
+    if not config_path.exists():
+        raise FileNotFoundError(f"Model configuration file not found at {config_path}")
+
+    with open(config_path, "r") as f:
+        config = yaml.safe_load(f)
+
+    variable_encoder_path = config["storage"].get("variable_encoder_path", None)
+    if variable_encoder_path and os.path.exists(variable_encoder_path):
+        variable_encoder = joblib.load(variable_encoder_path)
+    else:
+        raise FileNotFoundError(
+            f"Variable encoder not found at {variable_encoder_path}"
+        )
+
+    path_data = Path(config["storage"]["data_path"])
+    if not path_data.exists():
+        raise FileNotFoundError(f"Data file not found at {path_data}")
+
+    key = config["storage"]["hdf5_key_train"]
+    column_names = load_column_names(path=path_data, key=key)
+
+    return {
+        "model_path": model_path,
+        "variable_encoder": variable_encoder,
+        "column_names": column_names,
+    }
+
+
+def load_model_and_config(model_path: str) -> Tuple[Any, dict, list[str], Any]:
+    """
+    Load the ML model, configuration file, variable encoder, and column names.
+
+    Parameters
+    ----------
+    model_path : str
+        Path to the MLflow model directory.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the model, model config, column names, and variable encoder.
+
+    Raises
+    ------
+    FileNotFoundError
+        If any of the required files (config, encoder, data) are missing.
+    """
+    config_path = Path(model_path) / "model_config.yml"
+    if not config_path.exists():
+        raise FileNotFoundError(f"Model configuration file not found at {config_path}")
+
+    with open(config_path, "r") as f:
+        model_config = yaml.safe_load(f)
+
+    variable_encoder_path = model_config["storage"].get("variable_encoder_path")
+    if not variable_encoder_path or not os.path.exists(variable_encoder_path):
+        raise FileNotFoundError(
+            f"Variable encoder not found at {variable_encoder_path}"
+        )
+
+    path_data = Path(model_config["storage"]["data_path"])
+    if not path_data.exists():
+        raise FileNotFoundError(f"Data file not found at {path_data}")
+
+    key = model_config["storage"]["hdf5_key_train"]
+    column_names = load_column_names(path=path_data, key=key)
+
+    # Now it's safe to load the model
+    model = mlflow.sklearn.load_model(model_path)
+    variable_encoder = joblib.load(variable_encoder_path)
+
+    return model, model_config, column_names, variable_encoder

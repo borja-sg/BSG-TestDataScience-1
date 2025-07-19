@@ -3,12 +3,19 @@ import pytest
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import yaml
+import joblib
+from unittest.mock import patch
+from sklearn.preprocessing import OrdinalEncoder
+from typing import Any
 
 from stroke_predictor.utils.data_io import (
     load_csv_dataset,
     save_to_hdf,
     load_dataset,
     load_column_names,
+    load_config,
+    load_model_and_config,
 )
 
 
@@ -216,3 +223,114 @@ def test_load_column_names_missing_key(temp_hdf_without_target: Path) -> None:
     """Test loading column names with a missing key."""
     with pytest.raises(KeyError, match="No object named missing_key in the file"):
         load_column_names(path=temp_hdf_without_target, key="missing_key")
+
+
+@pytest.fixture
+def config_file_path(tmp_path: Path) -> Path:
+    """Create a temporary model_config.yml file for testing."""
+    config_path = tmp_path / "model_config.yml"
+    config = {
+        "storage": {
+            "variable_encoder_path": str(tmp_path / "encoder.pkl"),
+            "data_path": str(tmp_path / "data.h5"),
+            "hdf5_key_train": "test_key",
+        }
+    }
+    with open(config_path, "w") as f:
+        yaml.dump(config, f)
+    return config_path
+
+
+@pytest.fixture
+def encoder_file_path(tmp_path: Path) -> Path:
+    """Create a temporary encoder.pkl file for testing."""
+    encoder_path = tmp_path / "encoder.pkl"
+    encoder = OrdinalEncoder()
+    encoder.fit([["A"], ["B"]])  # Fit with dummy data so it's a valid encoder
+    joblib.dump(encoder, encoder_path)
+    return encoder_path
+
+
+@pytest.fixture
+def hdf_file_path(tmp_path: Path) -> Path:
+    """Create a temporary HDF5 file for testing."""
+    hdf_path = tmp_path / "data.h5"
+    df = pd.DataFrame({"feature_1": [1, 2], "feature_2": [3, 4]})
+    df.to_hdf(hdf_path, key="test_key", mode="w")
+    return hdf_path
+
+
+@patch("stroke_predictor.utils.data_io.load_column_names")
+def test_load_config_success(
+    mock_load_column_names: Any,
+    tmp_path: Path,
+    config_file_path: Path,
+    encoder_file_path: Path,
+    hdf_file_path: Path,
+) -> None:
+    """Test successful loading of config and resources."""
+    mock_load_column_names.return_value = ["feature_1", "feature_2"]
+    model_path = str(tmp_path)
+    result = load_config(model_path)
+    assert "model_path" in result
+    assert "variable_encoder" in result
+    assert "column_names" in result
+    assert result["column_names"] == ["feature_1", "feature_2"]
+
+
+def test_load_config_missing_config(tmp_path: Path) -> None:
+    """Test missing config file raises FileNotFoundError."""
+    model_path = str(tmp_path)
+    with pytest.raises(FileNotFoundError, match="Model configuration file not found"):
+        load_config(model_path)
+
+
+def test_load_config_missing_encoder(
+    tmp_path: Path, config_file_path: Path, hdf_file_path: Path
+) -> None:
+    """Test missing encoder file raises FileNotFoundError."""
+    model_path = str(tmp_path)
+    with pytest.raises(FileNotFoundError, match="Variable encoder not found"):
+        load_config(model_path)
+
+
+def test_load_config_missing_data(
+    tmp_path: Path, config_file_path: Path, encoder_file_path: Path
+) -> None:
+    """Test missing data file raises FileNotFoundError."""
+    model_path = str(tmp_path)
+    with pytest.raises(FileNotFoundError, match="Data file not found"):
+        load_config(model_path)
+
+
+@patch("stroke_predictor.utils.data_io.mlflow.sklearn.load_model")
+def test_load_model_and_config_missing_config(
+    mock_load_model: Any, tmp_path: Path
+) -> None:
+    """Test missing config file raises FileNotFoundError."""
+    model_path = str(tmp_path)
+    with pytest.raises(FileNotFoundError, match="Model configuration file not found"):
+        load_model_and_config(model_path)
+
+
+@patch("stroke_predictor.utils.data_io.mlflow.sklearn.load_model")
+def test_load_model_and_config_missing_encoder(
+    mock_load_model: Any, tmp_path: Path, config_file_path: Path, hdf_file_path: Path
+) -> None:
+    """Test missing encoder file raises FileNotFoundError."""
+    model_path = str(tmp_path)
+    with pytest.raises(FileNotFoundError, match="Variable encoder not found"):
+        load_model_and_config(model_path)
+
+
+@patch("stroke_predictor.utils.data_io.mlflow.sklearn.load_model")
+def test_load_model_and_config_missing_data(
+    mock_load_model: Any,
+    tmp_path: Path,
+    config_file_path: Path,
+    encoder_file_path: Path,
+) -> None:
+    """Test missing data file raises FileNotFoundError."""
+    model_path = str(tmp_path)
+    with pytest.raises(FileNotFoundError, match="Data file not found"):
+        load_model_and_config(model_path)
