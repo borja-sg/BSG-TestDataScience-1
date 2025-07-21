@@ -24,6 +24,44 @@ This project addresses a supervised classification problem using a public health
 
 ---
 
+## Running Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/borja-sg/BSG-TestDataScience-1
+   cd BSG-TestDataScience-1
+   ```
+
+2. Install dependencies:
+   ```bash
+   poetry install
+   ```
+
+3. Run exploratory data analysis notebooks in `notebooks/` to understand the data.
+
+4. Perform hyperparameter optimization:
+   ```bash
+   poetry run python stroke_predictor/optuna_optimization/runner.py ./stroke_predictor/configs/optuna.yml
+   ```
+
+5. Train the model with the best parameters:
+   ```bash
+   poetry run python stroke_predictor/train_model.py ./stroke_predictor/configs/train.yml
+   ```
+
+6. Launch the web inference application:
+   ```bash
+   uvicorn stroke_predictor.main:app --host 0.0.0.0 --port 8888 --reload
+   ```
+
+7. Access the web interface at:
+   ```
+   http://localhost:8888/web
+   ```
+
+
+---
+
 ## Docker (Development)
 
 Build the development image:
