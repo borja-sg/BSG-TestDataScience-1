@@ -66,30 +66,25 @@ bsg-testdatascience-1/
 
 ---
 
-## 🧪 Optimization and Web Inference
+## Running Steps
 
-### Run Hyperparameter Optimization with Optuna
-To perform model tuning and log results:
-```bash
-nohup poetry run python stroke_predictor/optuna_optimization/runner.py ./stroke_predictor/configs/optuna.yml &
-```
+1. **Exploratory Data Analysis (EDA)**  
+   Run the notebook to perform data cleaning, seasonality analysis, and feature engineering:  
+   ```bash
+   poetry run jupyter notebook
+   ```  
+   Open and execute `notebooks/eda.ipynb`.
 
-To start the Optuna dashboard:
-```bash
-optuna-dashboard sqlite:///outputs/optuna_stroke_prediction.db --host 0.0.0.0 --port 8888
-```
+2. **Optuna Hyperparameter Optimization**  
+   Run automated model tuning with Optuna:  
+   ```bash
+   poetry run python series_predictor/optuna_optimization/runner.py ./series_predictor/configs/optuna.yml
+   ```  
+   Training progress and results are logged with MLflow.
 
-### Train Model Using Best Parameters
-```bash
-nohup poetry run python stroke_predictor/train_model.py ./stroke_predictor/configs/train.yml &
-```
-
-### Launch Web Inference App
-```bash
-uvicorn stroke_predictor.main:app --host 0.0.0.0 --port 8888 --reload
-```
-
-Then open your browser at:
-```
-http://localhost:8888/web
-```
+3. **Model Evaluation**  
+   Evaluate the trained model using:  
+   ```bash
+   poetry run jupyter notebook
+   ```  
+   Then open and run `notebooks/evaluation.ipynb`.
