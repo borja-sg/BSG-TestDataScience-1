@@ -365,44 +365,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optimization-and-web-inference" class="md-nav__link">
+  <a href="#running-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      🧪 Optimization and Web Inference
+      Running Steps
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="🧪 Optimization and Web Inference">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#run-hyperparameter-optimization-with-optuna" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run Hyperparameter Optimization with Optuna
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#train-model-using-best-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Train Model Using Best Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#launch-web-inference-app" class="md-nav__link">
-    <span class="md-ellipsis">
-      Launch Web Inference App
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -499,44 +466,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optimization-and-web-inference" class="md-nav__link">
+  <a href="#running-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      🧪 Optimization and Web Inference
+      Running Steps
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="🧪 Optimization and Web Inference">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#run-hyperparameter-optimization-with-optuna" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run Hyperparameter Optimization with Optuna
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#train-model-using-best-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Train Model Using Best Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#launch-web-inference-app" class="md-nav__link">
-    <span class="md-ellipsis">
-      Launch Web Inference App
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -618,23 +552,30 @@
 </li>
 </ol>
 <hr />
-<h2 id="optimization-and-web-inference">🧪 Optimization and Web Inference</h2>
-<h3 id="run-hyperparameter-optimization-with-optuna">Run Hyperparameter Optimization with Optuna</h3>
-<p>To perform model tuning and log results:</p>
-<pre><code class="language-bash">nohup poetry run python stroke_predictor/optuna_optimization/runner.py ./stroke_predictor/configs/optuna.yml &amp;
-</code></pre>
-<p>To start the Optuna dashboard:</p>
-<pre><code class="language-bash">optuna-dashboard sqlite:///outputs/optuna_stroke_prediction.db --host 0.0.0.0 --port 8888
-</code></pre>
-<h3 id="train-model-using-best-parameters">Train Model Using Best Parameters</h3>
-<pre><code class="language-bash">nohup poetry run python stroke_predictor/train_model.py ./stroke_predictor/configs/train.yml &amp;
-</code></pre>
-<h3 id="launch-web-inference-app">Launch Web Inference App</h3>
-<pre><code class="language-bash">uvicorn stroke_predictor.main:app --host 0.0.0.0 --port 8888 --reload
-</code></pre>
-<p>Then open your browser at:</p>
-<pre><code>http://localhost:8888/web
-</code></pre>
+<h2 id="running-steps">Running Steps</h2>
+<ol>
+<li>
+<p><strong>Exploratory Data Analysis (EDA)</strong><br />
+   Run the notebook to perform data cleaning, seasonality analysis, and feature engineering:<br />
+<code>bash
+   poetry run jupyter notebook</code><br />
+   Open and execute <code>notebooks/eda.ipynb</code>.</p>
+</li>
+<li>
+<p><strong>Optuna Hyperparameter Optimization</strong><br />
+   Run automated model tuning with Optuna:<br />
+<code>bash
+   poetry run python series_predictor/optuna_optimization/runner.py ./series_predictor/configs/optuna.yml</code><br />
+   Training progress and results are logged with MLflow.</p>
+</li>
+<li>
+<p><strong>Model Evaluation</strong><br />
+   Evaluate the trained model using:<br />
+<code>bash
+   poetry run jupyter notebook</code><br />
+   Then open and run <code>notebooks/evaluation.ipynb</code>.</p>
+</li>
+</ol>
 
 
 
