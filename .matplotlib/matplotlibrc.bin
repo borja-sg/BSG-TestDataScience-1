@@ -1,0 +1,48 @@
+font.family      : STIXGeneral
+font.size        : 25.0
+mathtext.fontset : stix
+
+#text.usetex : False
+
+axes.titlesize: medium
+axes.titlepad: 20
+axes.labelsize: large
+axes.formatter.limits: -5, 5
+#axes.formatter.use_mathtext: False
+#axes.autolimit_mode: round_numbers
+axes.xmargin: 0.05
+axes.ymargin: 0.05
+axes.grid: True
+axes.linewidth: 1.2
+
+### GRIDS
+grid.color       :   black   # grid color
+grid.linestyle   :   :       # dotted
+grid.linewidth   :   0.5     # in points
+grid.alpha       :   0.1    # transparency, between 0.0 and 1.0
+
+xtick.top: True
+ytick.right: True
+
+#legend.numpoints     : 1
+legend.fontsize      : x-small
+legend.borderpad     : 0.3
+legend.handlelength  : 1.5
+legend.handletextpad : 0.3
+legend.columnspacing : 5
+#legend.markerscale   : 0.8
+legend.frameon       : True
+legend.framealpha    : 1
+legend.edgecolor     : 1
+legend.scatterpoints : 3
+#legend.shadow        : True
+
+figure.figsize    : 7, 6
+figure.subplot.left    : 0.15
+figure.subplot.right   : 0.95
+figure.subplot.bottom  : 0.18
+figure.subplot.top     : 0.87
+
+
+
+#savefig.facecolor: ff000000 # make figure patch transparent
